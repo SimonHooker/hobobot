@@ -16,25 +16,6 @@ module.exports = function(grunt) {
 			}
 		},
 
-	    bower_copy: {
-	        options: {
-	            clean: false
-	        },
-	    	fonts: {
-		        options: {},
-	            files: {
-	                'bower_components/bootstrap/fonts': 'public/fonts',
-	                'bower_components/font-awesome/fonts': 'public/fonts'
-	            }
-	    	},
-	    	maps: {
-		        options: {},
-	            files: {
-	                'bower_components/bootstrap/dist/css/bootstrap.css.map': 'public/bootstrap.css.map'
-	            }
-	    	}
-	    },
-
 		concat: {
 				js: {
 					src: [
@@ -77,8 +58,7 @@ module.exports = function(grunt) {
 
 	grunt.registerTask('js', ['bower_concat','concat:js']);
 	grunt.registerTask('css', ['less']);
-	grunt.registerTask('bower_copy', ['bower_copy']);
 
-	grunt.registerTask('default', ['js','css','bower_copy']);
+	grunt.registerTask('default', ['js','css']);
 
 };

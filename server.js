@@ -1,6 +1,10 @@
-var http = require('http');
-var os = require('os');
-var auth = require('http-auth');
+var express = require('express');
+var path = require('path');
+var auth = require('basic-auth');
+var compression = require('compression');
+var app = express();
+var server = require('http').createServer(app);
+
 
 // Helper methods
 
@@ -61,18 +65,25 @@ var auth = require('http-auth');
 
 
 // Server boot for status display
-	
+	app.use(function(req, res, next) {
+	    var user = auth(req);
 
-	var basic = auth.basic({
-		realm: "Hobobot Backend"
-	}, function (username, password, callback) {
-		callback(username === process.env.HTTP_USER && password === process.env.HTTP_PASSWORD);
+	    if (user === undefined || user['name'] !== process.env.HTTP_USER || user['pass'] !== process.env.HTTP_PASSWORD) {
+	        res.statusCode = 401;
+	        res.setHeader('WWW-Authenticate', 'Basic realm="MyRealmName"');
+	        res.end('Unauthorized');
+	    } else {
+	        next();
+	    }
 	});
 
-	var server = http.createServer( basic , function (request, response) {
-		response.writeHead(200, {'Content-Type': 'text/plain'});
-		response.end('Hobobot is alive!\n');
+	app.use(compression());
+	app.use(express.static(path.join(__dirname, 'public')));
+
+	app.get('/britannia.css',function(req,res){
+		res.sendfile(path.join(__dirname, 'css','hobobot.css'));
 	});
+
 	server.listen(80);
 	console.log('Server running at http://127.0.0.1/');
 	console.log({

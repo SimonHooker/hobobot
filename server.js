@@ -20,6 +20,13 @@ var io = require('socket.io')(server);
 			   messageText.substr(0, userTag.length) === userTag;
 	};
 
+// The io connection
+
+	io.on('connection',function(client){
+		// Send inital state somehow?
+		return {foo:'bar'};
+	});
+
 // The actual bot
 
 	var Slack = require('slack-client');
@@ -55,7 +62,8 @@ var io = require('socket.io')(server);
 		var channel = slack.getChannelGroupOrDMByID(message.channel);
 		//console.log( channel );
 		var user = slack.getUserByID(message.user);
-
+		
+		io.sockets.emit( 'message' , message );
 
 		if (message.type === 'message' && isDirect(slack.self.id, message.text)) {
 			console.log('foo' + ':' + user.name + ':' + message.text);
@@ -64,43 +72,8 @@ var io = require('socket.io')(server);
 
 	slack.login();
 
-// The io connection
 
-	io.on('connection',function(client){
 
-		/*
-		
-		client.on('join',function(name){
-
-			client.nickname = name;
-			client.emit('signedin',{
-				nickname: name
-			});
-
-			client.emit('spawn',[
-				{ x: 100, y: 100 },
-				{ x: 100, y: 200 },
-				{ x: 200, y: 100 }
-			]);
-
-		});
-
-		client.on('messages',function(message){
-
-			var transmitMe = {
-				timestamp: new Date(),
-				nickname: client.nickname,
-				message: message
-			};
-
-			client.broadcast.emit('messages',transmitMe);
-			client.emit('messages',transmitMe);
-
-		});
-
-		*/
-
-	});
 
 
 // Server boot for status display

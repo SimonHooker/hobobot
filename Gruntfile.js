@@ -20,11 +20,7 @@ module.exports = function(grunt) {
 				js: {
 					src: [
 						'src/js/_bower.js',
-						'src/js/app.js',
-						'src/js/router.js',
-						'src/js/models/*.js',
-						'src/js/components/*.js',
-						'src/js/routes/*.js'
+						'src/js/dashboard.js'
 					],
 					dest: 'public/hobobot.js'
 				}

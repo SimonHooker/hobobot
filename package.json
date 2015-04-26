@@ -1,9 +1,10 @@
 {
-	"name": "hobobot",
-	"description": "Hobobot Slack Bot",
-	"version": "0.0.1",
-	"private": true,
-	"dependencies": {
-	},
-	"devDependencies": {}
+  "name": "hobobot",
+  "description": "Hobobot Slack Bot",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "slackbot": "0.0.1"
+  },
+  "devDependencies": {}
 }

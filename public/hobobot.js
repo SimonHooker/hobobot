@@ -18529,7 +18529,7 @@ var socket = io.connect('http://'+window.location.hostname+':80');
 $(function() {
 
 	var importantElements = {
-
+		messagesList: $('#messagesList')
 	};
 
 
@@ -18544,9 +18544,7 @@ $(function() {
 
 
 	socket.on('message',function(data){
-
-		console.log(data);
-
+		importantElements.messagesList.append('<li><strong>'+data.user+'</strong> '+data.text+'</li>');
 	});
 	
 });

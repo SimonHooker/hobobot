@@ -1,0 +1,9 @@
+{
+	"name": "hobobot",
+	"description": "Hobobot Slack Bot",
+	"version": "0.0.1",
+	"private": true,
+	"dependencies": {
+	},
+	"devDependencies": {}
+}

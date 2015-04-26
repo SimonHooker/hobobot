@@ -49,6 +49,11 @@ var io = require('socket.io')(server);
 
 		if (message.type === 'message' && channel.is_im && user.name != 'slackbot') {
 
+			io.sockets.emit( 'message' , {
+				user: user.name,
+				text: JSON.stringify(message)
+			} );
+			/*
 			var payload = {
 				user: {
 					id: user.id,
@@ -75,6 +80,7 @@ var io = require('socket.io')(server);
 					} );
 				}
 			});
+			*/		
 
 		}
 	});

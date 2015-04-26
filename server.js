@@ -1,3 +1,10 @@
+var AWS = require('aws-sdk'); 
+var config = new AWS.Config({
+	accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+	secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+	region: process.env.AWS_REGION
+});
+var lambda = new AWS.Lambda();
 var express = require('express');
 var path = require('path');
 var auth = require('basic-auth');
@@ -28,13 +35,47 @@ var io = require('socket.io')(server);
 	slack.on('message', function(message) {
 		var channel = slack.getChannelGroupOrDMByID(message.channel);
 		var user = slack.getUserByID(message.user);
+/*
+	user = {
+		id: 'U04GR0T77',
+		name: 'simon',
+		real_name: 'Simon Hooker',
+		profile: {
+			email: 'simon@mso.net'
+		},
+		is_bot: false
+	}
+*/
+
 		if (message.type === 'message' && channel.is_im && user.name != 'slackbot') {
 
-			// Process the message here instead of just emitting message
-			io.sockets.emit( 'message' , {
-				user: user.name,
-				text: message.text
-			} );
+			var payload = {
+				user: {
+					id: user.id,
+					name: user.name,
+					real_name: user.real_name,
+					email: user.profile.email
+				},
+				message: message
+			};
+
+			lambda.invoke({
+				FunctionName: "hobobot-handle-message",
+				Payload: JSON.stringify(payload)
+			}, function(err, data) {
+				if (err) {
+					io.sockets.emit( 'message' , {
+						user: user.name,
+						text: JSON.stringify(err)
+					} );
+				} else {
+					io.sockets.emit( 'message' , {
+						user: user.name,
+						text: JSON.stringify(data.payload)
+					} );
+				}
+			});
+
 		}
 	});
 

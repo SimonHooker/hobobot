@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
+    "aws-sdk": "^2.1.25",
     "basic-auth": "^1.0.0",
     "compression": "^1.4.3",
     "express": "^4.12.3",

@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "slackbot": "0.0.1"
+    "slack-client": "^1.4.0"
   },
   "devDependencies": {}
 }

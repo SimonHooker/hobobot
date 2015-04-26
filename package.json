@@ -7,8 +7,8 @@
     "basic-auth": "^1.0.0",
     "compression": "^1.4.3",
     "express": "^4.12.3",
-    "path": "^0.11.14",
-    "slack-client": "^1.4.0"
+    "slack-client": "^1.4.0",
+    "socket.io": "^1.3.5"
   },
   "devDependencies": {
     "assemble-less": "^0.7.0",

@@ -4,6 +4,7 @@ var auth = require('basic-auth');
 var compression = require('compression');
 var app = express();
 var server = require('http').createServer(app);
+var io = require('socket.io')(server);
 
 
 // Helper methods
@@ -63,6 +64,44 @@ var server = require('http').createServer(app);
 
 	slack.login();
 
+// The io connection
+
+	io.on('connection',function(client){
+
+		/*
+		
+		client.on('join',function(name){
+
+			client.nickname = name;
+			client.emit('signedin',{
+				nickname: name
+			});
+
+			client.emit('spawn',[
+				{ x: 100, y: 100 },
+				{ x: 100, y: 200 },
+				{ x: 200, y: 100 }
+			]);
+
+		});
+
+		client.on('messages',function(message){
+
+			var transmitMe = {
+				timestamp: new Date(),
+				nickname: client.nickname,
+				message: message
+			};
+
+			client.broadcast.emit('messages',transmitMe);
+			client.emit('messages',transmitMe);
+
+		});
+
+		*/
+
+	});
+
 
 // Server boot for status display
 	app.use(function(req, res, next) {
@@ -80,9 +119,7 @@ var server = require('http').createServer(app);
 	app.use(compression());
 	app.use(express.static(path.join(__dirname, 'public')));
 
-	app.get('/britannia.css',function(req,res){
-		res.sendfile(path.join(__dirname, 'css','hobobot.css'));
-	});
+
 
 	server.listen(80);
 	console.log('Server running at http://127.0.0.1/');

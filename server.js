@@ -4,12 +4,13 @@ var config = new AWS.Config({
 	secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 	region: process.env.AWS_REGION
 });
-var lambda = new AWS.Lambda();
 var express = require('express');
 var path = require('path');
 var auth = require('basic-auth');
 var compression = require('compression');
 var app = express();
+var Slack = require('slack-client');
+var HoboHandler = require('./hobo-handler');
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 
@@ -25,8 +26,9 @@ var io = require('socket.io')(server);
 
 // The actual bot
 
-	var Slack = require('slack-client');
 	var slack = new Slack(process.env.SLACK_TOKEN, true, true);
+	var hobohandler = new HoboHandler(io,slack,AWS);
+
 
 	slack.on('open', function () {
 		console.log('Welcome to Slack. You are ' + slack.self.name + ' of ' + slack.team.name);
@@ -35,53 +37,8 @@ var io = require('socket.io')(server);
 	slack.on('message', function(message) {
 		var channel = slack.getChannelGroupOrDMByID(message.channel);
 		var user = slack.getUserByID(message.user);
-/*
-	user = {
-		id: 'U04GR0T77',
-		name: 'simon',
-		real_name: 'Simon Hooker',
-		profile: {
-			email: 'simon@mso.net'
-		},
-		is_bot: false
-	}
-*/
-
 		if (message.type === 'message' && channel.is_im && user.name != 'slackbot') {
-
-			io.sockets.emit( 'message' , {
-				user: user.name,
-				text: JSON.stringify(message)
-			} );
-			/*
-			var payload = {
-				user: {
-					id: user.id,
-					name: user.name,
-					real_name: user.real_name,
-					email: user.profile.email
-				},
-				message: message
-			};
-
-			lambda.invoke({
-				FunctionName: "hobobot-handle-message",
-				Payload: JSON.stringify(payload)
-			}, function(err, data) {
-				if (err) {
-					io.sockets.emit( 'message' , {
-						user: user.name,
-						text: JSON.stringify(err)
-					} );
-				} else {
-					io.sockets.emit( 'message' , {
-						user: user.name,
-						text: JSON.stringify(data.payload)
-					} );
-				}
-			});
-			*/		
-
+			hobohandler.process( channel , user , message );	
 		}
 	});
 

@@ -1,6 +1,6 @@
 var http = require('http');
 var os = require('os');
-
+var auth = require('http-auth');
 
 // Helper methods
 
@@ -61,7 +61,15 @@ var os = require('os');
 
 
 // Server boot for status display
-	var server = http.createServer(function (request, response) {
+	
+
+	var basic = auth.basic({
+		realm: "Hobobot Backend"
+	}, function (username, password, callback) {
+		callback(username === process.env.HTTP_USER && password === process.env.HTTP_PASSWORD);
+	});
+
+	var server = http.createServer( basic , function (request, response) {
 		response.writeHead(200, {'Content-Type': 'text/plain'});
 		response.end('Hobobot is alive!\n');
 	});

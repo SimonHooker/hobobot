@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
+    "http-auth": "^2.2.5",
     "slack-client": "^1.4.0"
   },
   "devDependencies": {}
